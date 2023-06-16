@@ -1,0 +1,28 @@
+$ docker-compose up -d
+$ echo $(htpasswd -nb samim samim123) | sed -e s/\\$/\\$\\$/g  ----> user samim, password samim123 when log traefik.trycloud.co.in ask for auth
+samim:$$apr1$$NU7Jf3H0$$eedQDYYuQTYpuEUwB.zs.0
+my domain:   trycloud.co.in
+
+traefik.trycloud.in
+vote.trycloud.in
+result.trycloud.co.in
+
+point to EC2 IP.
+
+client--(https or http to https) (help letsencrypt)-->entrypoint (80, 443)->router (result@docker)/rule (Host(`result.trycloud.co.in`)---
+---->middleware (basic-auth, samim:$apr1$NU7Jf3H0$eedQDYYuQTYpuEUwB.zs.0)------>service(result)--->container ip,  container port 80
+
+client--(https or http to https) (help letsencrypt)-->entrypoint (80, 443) ----> router (vote@docker)/rule (Host(`vote.trycloud.co.in`)---
+---->middleware (basic-auth, samim:$apr1$NU7Jf3H0$eedQDYYuQTYpuEUwB.zs.0)----->service(vote)----> container ip, container port 80
+
+client--(https or http to https) (help letsencrypt)-->entrypoint (80, 443)---> ----->router (traefik@docker)/rule (Host(`traefik.trycloud.co.in`)--->
+middleware (basic-auth, samim:$apr1$NU7Jf3H0$eedQDYYuQTYpuEUwB.zs.0)--->service api@internal ---> container ip, container port 80  
+
+
+this done by routing by HOST.
+
+------------------------------------------
+also you can route by host path
+service/app1
+service/app2
+-------------------------------------------
